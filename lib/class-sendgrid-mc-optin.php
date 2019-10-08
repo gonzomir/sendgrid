@@ -1,8 +1,6 @@
 <?php
 
-require_once plugin_dir_path( __FILE__ ) . 'class-sendgrid-tools.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-sendgrid-nlvx.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-sendgrid-virtual-pages.php';
 
 class Sendgrid_OptIn_API_Endpoint{
   /** 
