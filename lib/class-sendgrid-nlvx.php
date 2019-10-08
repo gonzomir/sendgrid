@@ -4,7 +4,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-sendgrid-tools.php';
 
 class Sendgrid_NLVX
 {
-  const NLVX_API_URL = 'https://api.sendgrid.com/v3/contactdb';
+  const NLVX_API_URL = 'https://api.sendgrid.com/v3/marketing';
 
   /**
    * Returns the appropriate header value of authorization depending on the available credentials.
@@ -59,8 +59,8 @@ class Sendgrid_NLVX
     }
 
     $lists_response = json_decode($response['body'], true);
-    if ( isset( $lists_response['lists'] ) ) {
-      return $lists_response['lists'];
+    if ( isset( $lists_response['result'] ) ) {
+      return $lists_response['result'];
     }
 
     return false;
@@ -83,7 +83,13 @@ class Sendgrid_NLVX
       return false;
     }
 
+    $list_id = Sendgrid_Tools::get_mc_list_id();
+    if ( false == $list_id ) {
+      return false;
+    }
+
     $args = array(
+        'method' => 'PUT',
         'headers' => array(
           'Authorization' => $auth
         ),
@@ -91,7 +97,7 @@ class Sendgrid_NLVX
         'timeout' => Sendgrid_Tools::get_request_timeout()
     );
 
-    $url = Sendgrid_NLVX::NLVX_API_URL . '/recipients';
+    $url = Sendgrid_NLVX::NLVX_API_URL . '/contacts';
 
     $contact = array('email' => $email);
 
@@ -103,10 +109,15 @@ class Sendgrid_NLVX
       $contact['last_name'] = $last_name;
     }
 
-    $req_body = json_encode(array($contact));
+    $request = array(
+      'list_id' => array( $list_id ),
+      'contacts' => array( $contact ),
+    );
+
+    $req_body = wp_json_encode( $request );
     $args['body'] = $req_body;
 
-    $response = wp_remote_post( $url, $args );
+    $response = wp_remote_request( $url, $args );
 
     if ( ! is_array( $response ) or ! isset( $response['body'] ) ) {
       return false;
@@ -125,45 +136,6 @@ class Sendgrid_NLVX
   }
 
   /**
-   * Adds a recipient in the specified list
-   *
-   * @param   string $recipient_id      the ID of the recipient.
-   * @param   string $list_id           the ID of the list.
-   *
-   * @return  bool   True if successful, false otherwise.
-   */
-  public static function add_recipient_to_list($recipient_id, $list_id)
-  {
-    $auth = Sendgrid_NLVX::get_auth_header_value();
-
-    if ( false == $auth ) {
-      return false;
-    }
-
-    $args = array(
-        'headers' => array(
-          'Authorization' => $auth
-        ),
-        'decompress' => false,
-        'timeout' => Sendgrid_Tools::get_request_timeout()
-    );
-
-    $url = Sendgrid_NLVX::NLVX_API_URL . '/lists/'. $list_id . '/recipients/' . $recipient_id;
-
-    $response = wp_remote_post( $url, $args );
-
-    if ( ! is_array( $response ) or ! isset( $response['body'] ) ) {
-      return false;
-    }
-
-    if ( isset( $response['response']['code'] ) && 201 == $response['response']['code'] ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Adds a recipient in the SendGrid MC contact db and adds it to the list
    *
    * @param   string $email          The email of the recipient
@@ -174,16 +146,11 @@ class Sendgrid_NLVX
    */
   public static function create_and_add_recipient_to_list($email, $first_name = '', $last_name = '')
   {
-    $list_id = Sendgrid_Tools::get_mc_list_id();
-    if ( false == $list_id ) {
-      return false;
-    }
-
     $recipient_id = Sendgrid_NLVX::add_recipient($email, $first_name, $last_name);
     if ( false == $recipient_id ) {
       return false;
     }
 
-    return Sendgrid_NLVX::add_recipient_to_list($recipient_id, $list_id);
+    return true;
   }
 }
