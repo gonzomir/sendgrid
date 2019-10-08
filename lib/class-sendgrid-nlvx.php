@@ -91,7 +91,8 @@ class Sendgrid_NLVX
     $args = array(
         'method' => 'PUT',
         'headers' => array(
-          'Authorization' => $auth
+          'Authorization' => $auth,
+          'content-type' => 'application/json',
         ),
         'decompress' => false,
         'timeout' => Sendgrid_Tools::get_request_timeout()
@@ -128,11 +129,11 @@ class Sendgrid_NLVX
       return false;
     }
 
-    if ( ! isset( $recipient_response['persisted_recipients'] ) or ! isset( $recipient_response['persisted_recipients'][0] ) ) {
+    if ( ! isset( $recipient_response['job_id'] ) ) {
       return false;
     }
 
-    return $recipient_response['persisted_recipients'][0];
+    return $recipient_response['job_id'];
   }
 
   /**
