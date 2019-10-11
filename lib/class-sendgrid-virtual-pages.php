@@ -59,7 +59,7 @@ if ( ! class_exists( 'SGVirtualPage' ) )
       $post->post_parent            = 0;
       $post->guid                   = get_home_url('/' . $this->slug);
       $post->menu_order             = 0;
-      $post->post_tyle              = $this->type;
+      $post->post_type              = $this->type;
       $post->post_mime_type         = '';
       $post->comment_count          = 0;
 
