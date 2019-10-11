@@ -71,7 +71,7 @@ class SendGrid_NLVX_Widget extends WP_Widget {
 
       // Widget title input
       echo '<p>';
-      echo '<label for="' . $this->get_field_id( 'title' ) . '">' . _e( 'Title:' ) . '</label>'; 
+      echo '<label for="' . $this->get_field_id( 'title' ) . '">' . _e( 'Title:' ) . '</label>';
       echo '<input class="widefat" id="'. $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . ' type="text" value="' . esc_attr( $title ) . '" />';
       echo '</p>';
 
@@ -275,7 +275,10 @@ class SendGrid_NLVX_Widget extends WP_Widget {
 
       $require_fname_lname = '';
 
-      echo '<form method="post" id="sendgrid_mc_email_form" class="mc_email_form" action="#sendgrid_mc_email_subscribe" style="padding-top: 10px;">';
+      printf(
+        '<form method="post" id="sendgrid_mc_email_form" class="mc_email_form" action="#%1$s" style="padding-top: 10px;">',
+        esc_attr( $this->id )
+      );
 
       if ( 'true' == Sendgrid_Tools::get_mc_opt_incl_fname_lname() ) {
         if ( 'true' == Sendgrid_Tools::get_mc_opt_req_fname_lname() ) {
