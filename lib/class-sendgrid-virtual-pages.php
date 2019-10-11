@@ -95,9 +95,11 @@ function sg_create_subscribe_general_error_page()
 
   if ( $url == 'sg-error' )
   {
-    $args = array('slug' => 'sg-error',
-              'title' => 'Subscribe error',
-              'content' => 'Something went wrong while trying to send information.' );
+    $args = array(
+      'slug' => 'sg-error',
+      'title' => 'Subscribe error',
+      'content' => 'Something went wrong while trying to send information.',
+    );
     $pg = new SGVirtualPage( $args );
   }
 }
@@ -113,9 +115,11 @@ function sg_create_subscribe_invalid_token_error_page()
 
   if ( $url == 'sg-subscription-invalid-token' )
   {
-    $args = array( 'slug' => 'sg-subscription-invalid-token',
-              'title' => 'Subscribe error',
-              'content' => 'Token is invalid, you are not subscribed to our newsletter.' );
+    $args = array(
+      'slug' => 'sg-subscription-invalid-token',
+      'title' => 'Subscribe error',
+      'content' => 'Token is invalid, you are not subscribed to our newsletter.',
+    );
     $pg = new SGVirtualPage( $args );
   }
 }
@@ -131,9 +135,11 @@ function sg_create_subscribe_missing_token_error_page()
 
   if ( $url == 'sg-subscription-missing-token' )
   {
-    $args = array( 'slug' => 'sg-subscription-missing-token',
-              'title' => 'Subscribe error',
-              'content' => 'Token is missing, you are not subscribed to our newsletter.' );
+    $args = array(
+      'slug' => 'sg-subscription-missing-token',
+      'title' => 'Subscribe error',
+      'content' => 'Token is missing, you are not subscribed to our newsletter.',
+    );
     $pg = new SGVirtualPage( $args );
   }
 }
@@ -149,9 +155,11 @@ function sg_create_subscribe_success_page()
 
   if ( $url == 'sg-subscription-success' )
   {
-    $args = array( 'slug' => 'sg-subscription-success',
-          'title' => 'Subscribe success',
-          'content' => 'You have been successfully subscribed to our newsletter.' );
+    $args = array(
+      'slug' => 'sg-subscription-success',
+      'title' => 'Subscribe success',
+      'content' => 'You have been successfully subscribed to our newsletter.',
+    );
     $pg = new SGVirtualPage( $args );
   }
 }
