@@ -24,7 +24,7 @@ if ( ! class_exists( 'SGVirtualPage' ) )
       $this->dategmt  = isset( $args['date'] ) ? $args['date'] : current_time( 'mysql', 1 );
       $this->type     = isset( $args['type'] ) ? $args['type'] : 'page';
 
-      add_filter( 'the_posts', array( &$this, 'virtualPage' ) );
+      add_filter( 'the_posts', array( &$this, 'virtualPage' ), 11, 2 );
     }
 
     /**
@@ -33,9 +33,11 @@ if ( ! class_exists( 'SGVirtualPage' ) )
      * @param   mixed  $posts  posts saved in wp
      * @return  mixed  $posts  posts saved in wp
      */
-    public function virtualPage( $posts )
+    public function virtualPage( $posts, $wp_query )
     {
-      global $wp, $wp_query;
+      if ( ! $wp_query->is_main_query() ) {
+        return $posts;
+      }
 
       $post = new stdClass;
 
@@ -63,19 +65,19 @@ if ( ! class_exists( 'SGVirtualPage' ) )
       $post->post_mime_type         = '';
       $post->comment_count          = 0;
 
-      $posts = array( $post );
-
       $wp_query->is_page      = TRUE;
       $wp_query->is_singular  = TRUE;
       $wp_query->is_home      = FALSE;
       $wp_query->is_archive   = FALSE;
       $wp_query->is_category  = FALSE;
+      $wp_query->is_404       = FALSE;
 
       unset( $wp_query->query['error'] );
       $wp_query->query_vars['error']  = '';
-      $wp_query->is_404               = FALSE;
 
-      remove_filter( 'the_posts', array( &$this, 'virtualPage' ) );
+      $wp_query->post = $post;
+
+      $posts = array( $post );
 
       return $posts;
     }
